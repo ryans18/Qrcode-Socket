@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText usernameEditText;
     private EditText passwordEditText;
+    private EditText apiUrl;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-
-
-
+        apiUrl = findViewById(R.id.api_url);
+//        http://192.168.1.6:8088
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,17 +59,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                SPUtils.getInstance().put("API_URL", s.toString());
             }
         };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                return false;
-            }
-        });
+        apiUrl.setText(SPUtils.getInstance().getString("API_URL", getString(R.string.server_url)));
+        apiUrl.addTextChangedListener(afterTextChangedListener);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.server_url))
+                .baseUrl(SPUtils.getInstance().getString("API_URL", getString(R.string.server_url)))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

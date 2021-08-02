@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
         mWelcome = findViewById(R.id.welcome);
         mBtnScan = findViewById(R.id.scan);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.server_url))
+                .baseUrl(SPUtils.getInstance().getString("API_URL", getString(R.string.server_url)))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiService service = retrofit.create(ApiService.class);
